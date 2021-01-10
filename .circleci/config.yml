@@ -32,7 +32,7 @@ jobs:
         executor: default
         steps:
             - checkout
-            - composer/install
+            - composer/install:
                 working-dir: tests
 
 workflows:
