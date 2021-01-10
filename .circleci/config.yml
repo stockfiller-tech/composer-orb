@@ -68,8 +68,6 @@ workflows:
                     orb-name: stockfiller/composer
                     context: <publishing-context>
                     add-pr-comment: false
-                    fail-if-semver-not-indicated: true
-                    publish-version-tag: false
                     requires:
                         - integration-test
                     filters:
