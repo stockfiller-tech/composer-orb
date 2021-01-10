@@ -1,5 +1,18 @@
 version: 2.1
 
+executors:
+    default:
+        docker:
+            -   image: cimg/php:7.4
+        resource_class: small
+
+orbs:
+    # Replace this with your own!
+    <orb-name>: stockfiller/composer@<<pipeline.parameters.dev-orb-version>>
+    orb-tools: circleci/orb-tools@10.0
+    bats: circleci/bats@1.0
+    shellcheck: circleci/shellcheck@2.0
+
 # These parameters are used internally by orb-tools. Skip to the Jobs section.
 parameters:
     run-integration-tests:
@@ -14,44 +27,52 @@ parameters:
         type: string
         default: "dev:alpha"
 
-orbs:
-    orb-tools: circleci/orb-tools@10.0
-    composer: stockfiller/composer@<<pipeline.parameters.dev-orb-version>>
-
 jobs:
-    integration-tests-for-your-orb:
-        executor: orb-tools/ubuntu
+    integration-test:
+        executor: default
         steps:
             - checkout
-            - composer/install_bin
-            - composer/install:
-                  working-dir: tests
+            - composer/install
+                working-dir: tests
+
 workflows:
-    integration-test_deploy:
-        jobs:
-            - integration-tests-for-your-orb
-            -   orb-tools/dev-promote-prod-from-commit-subject:
-                    add-pr-comment: false
-                    fail-if-semver-not-indicated: false
-                    filters:
-                        branches:
-                            only: master
-                    orb-name: stockfiller/composer
-                    publish-version-tag: false
-                    requires:
-                        - integration-tests-for-your-orb
-        when: << pipeline.parameters.run-integration-tests >>
     test-pack:
+        unless: << pipeline.parameters.run-integration-tests >>
         jobs:
             - orb-tools/lint
             - orb-tools/pack
-            -   orb-tools/publish-dev:
-                    orb-name: stockfiller/composer
+            -   shellcheck/check:
+                    dir: ./src/scripts
+                    exclude: SC2148
+            -   hold-for-dev-publish:
+                    type: approval
                     requires:
                         - orb-tools/lint
                         - orb-tools/pack
+                        - shellcheck/check
+            -   orb-tools/publish-dev:
+                    orb-name: stockfiller/composer
+                    context: <publishing-context>
+                    requires:
+                        - hold-for-dev-publish
             -   orb-tools/trigger-integration-tests-workflow:
                     name: trigger-integration-dev
+                    context: <publishing-context>
                     requires:
                         - orb-tools/publish-dev
-        unless: << pipeline.parameters.run-integration-tests >>
+
+    integration-test_deploy:
+        when: << pipeline.parameters.run-integration-tests >>
+        jobs:
+            - integration-test
+            -   orb-tools/dev-promote-prod-from-git-tag:
+                    orb-name: stockfiller/composer
+                    context: <publishing-context>
+                    add-pr-comment: false
+                    fail-if-semver-not-indicated: true
+                    publish-version-tag: false
+                    requires:
+                        - integration-test
+                    filters:
+                        tags:
+                            only: /^\d+\.\d+\.\d+$/
