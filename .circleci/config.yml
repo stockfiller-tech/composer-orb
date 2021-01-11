@@ -7,7 +7,7 @@ executors:
     resource_class: small
   circleci-cli:
     docker:
-      - image: circleci/circleci-cli
+      - image: cimg/base
     resource_class: small
 
 orbs:
@@ -57,13 +57,25 @@ jobs:
     executor: circleci-cli
     steps:
       - checkout
+      - orb/pack
+      - orb/publish:
+          orb-ref: stockfiller/composer@${CIRCLE_TOKEN}
+      - store_artifacts:
+          path: orb.yml
+  trigger_workflow:
+    executor: circleci-cli
+    parameters:
+      workflow:
+        type: string
+    steps:
       - run:
-          name: Deploy to production
-          environment:
-            CIRCLECI_CLI_TOKEN: "${CIRCLE_TOKEN}"
+          name: Trigger workflow << parameters.workflow >>
           command: >-
-            circleci orb pack --skip-update-check src | circleci orb publish --skip-update-check - stockfiller/composer@${CIRCLE_TAG}
-
+            curl --request POST
+            --url https://circleci.com/api/v2/project/vcs-slug/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline
+            --header 'Circle-Token: ${CIRCLE_TOKEN}'
+            --header 'content-type: application/json'
+            --data '{"parameters":{"run-integration-tests":true,"dev-orb-version":"dev:${CIRCLE_SHA1:0:7}"}}'
 
 workflows:
   test-pack:
@@ -89,13 +101,13 @@ workflows:
             - orb-tools/lint
             - orb-tools/pack
             - shellcheck/check
-      - orb-tools/trigger-integration-tests-workflow:
+      - trigger_workflow:
           filters: *filters
-          name: trigger-integration-dev
-          context: orb-publishing
+          workflow: integration-test-deploy
+          context: [ orb-publishing ]
           requires: [ orb-tools/publish-dev ]
 
-  integration-test_deploy:
+  integration-test-deploy:
     when: << pipeline.parameters.run-integration-tests >>
     jobs:
       - integration-test:
