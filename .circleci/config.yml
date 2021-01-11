@@ -1,13 +1,9 @@
 version: 2.1
 
 executors:
-  php:
-    docker:
-      - image: cimg/php:7.4
-    resource_class: small
   default:
     docker:
-      - image: cimg/base
+      - image: cimg/php:7.4
     resource_class: small
 
 orbs:
@@ -32,7 +28,7 @@ parameters:
 
 jobs:
   integration-test:
-    executor: php
+    executor: default
     steps:
       - checkout
       - run: |-
