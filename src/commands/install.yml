@@ -60,7 +60,7 @@ parameters:
   working-dir:
     description: If specified, use the given directory as working directory
     type: string
-    default: ""
+    default: "${CIRCLE_WORKING_DIRECTORY}"
 steps:
   - when:
       condition: << parameters.cache-version >>

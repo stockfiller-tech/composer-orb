@@ -26,6 +26,26 @@ parameters:
     type: string
     default: "dev:alpha"
 
+jobs:
+  integration-test:
+    executor: default
+    steps:
+      - checkout
+      - checkout:
+          path: /tmp/source
+      - run: cp tests/composer.json composer.json
+      - composer/install_bin:
+          install-bir: /tmp/composer
+      - composer/install:
+          working-dir: tests
+          classmap-authoritative: true
+      - composer/install:
+          working-dir: /tmp/source
+          bin: /tmp/composer/composer
+      - composer/install:
+          cache-version: ""
+      - composer/install
+
 workflows:
   test-pack:
     unless: << pipeline.parameters.run-integration-tests >>
@@ -51,26 +71,7 @@ workflows:
   integration-test_deploy:
     when: << pipeline.parameters.run-integration-tests >>
     jobs:
-      - composer/checkout_install:
-          name: integration-test
-          executor: "default"
-          pre-steps:
-            - composer/install_bin:
-                filename: composer.phar
-                install-dir: /tmp/composer
-            - checkout:
-                path: /tmp/source
-          matrix:
-            parameters:
-              classmap-authoritative:
-                - true
-                - false
-              bin:
-                - composer
-                - /tmp/composer/composer.phar
-              working-dir:
-                - tests
-                - /tmp/source
+      - integration-test
       - orb-tools/dev-promote-prod-from-git-tag:
           orb-name: stockfiller/composer
           context: orb-publishing
