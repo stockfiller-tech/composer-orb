@@ -61,7 +61,7 @@ workflows:
     jobs:
       # The job below is the integration tests
       - composer/checkout_install:
-          executor: default
+          executor: "default"
           pre-steps:
             - install_bin:
                 filename: composer.phar
