@@ -58,14 +58,11 @@ jobs:
           orb-ref: stockfiller/composer@${CIRCLE_TOKEN}
       - store_artifacts:
           path: orb.yml
-  trigger_workflow:
+  trigger_integration_deploy_workflow:
     executor: default
-    parameters:
-      workflow:
-        type: string
     steps:
       - run:
-          name: Trigger workflow << parameters.workflow >>
+          name: Trigger integration test and deploy workflow
           command: >-
             curl --request POST
             --url https://circleci.com/api/v2/project/vcs-slug/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline
@@ -97,9 +94,8 @@ workflows:
             - orb-tools/lint
             - orb-tools/pack
             - shellcheck/check
-      - trigger_workflow:
+      - trigger_integration_deploy_workflow:
           filters: *filters
-          workflow: integration-test-deploy
           context: [ orb-publishing ]
           requires: [ orb-tools/publish-dev ]
 
