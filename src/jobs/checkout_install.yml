@@ -66,7 +66,7 @@ parameters:
   working-dir:
     description: If specified, use the given directory as working directory
     type: string
-    default: "."
+    default: ""
 executor: << parameters.executor >>
 steps:
   - checkout
