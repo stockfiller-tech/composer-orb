@@ -83,17 +83,10 @@ workflows:
             - orb-tools/lint
             - orb-tools/pack
             - shellcheck/check
-      - trigger_integration_deploy_workflow:
+      - orb-tools/trigger-integration-tests-workflow:
           filters: *filters
           context: [ orb-publishing ]
           requires: [ orb-tools/publish-dev ]
-
-  integration-test_deploy:
-    when: << pipeline.parameters.run-integration-tests >>
-    jobs:
-      - integration-test:
-          filters: *filters
-      - orb-tools/trigger-integration-tests-workflow:
           pre-steps:
             - run:
               name: Use tag or branch
@@ -101,5 +94,12 @@ workflows:
                 if [ -z "${CIRCLE_TAG}" ]; then
                   echo "export CIRCLE_BRANCH=${CIRCLE_TAG}" >> $BASH_ENV
                 fi
+
+  integration-test_deploy:
+    when: << pipeline.parameters.run-integration-tests >>
+    jobs:
+      - integration-test:
+          filters: *filters
+      - deploy:
           requires: [ integration-test ]
           filters: *filters
