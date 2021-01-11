@@ -20,8 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 description: >-
-  Checkout source code and run Composer install. This job exists primarily for testing purposes
-  and it is recommended to use the commands directly.
+  Checkout source code and run Composer install. The vendor directory will be exported to the workspace
+  for usage in other jobs.
 parameters:
   executor:
     description: Environment to run in

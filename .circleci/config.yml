@@ -26,14 +26,6 @@ parameters:
     type: string
     default: "dev:alpha"
 
-jobs:
-  integration-test:
-    executor: default
-    steps:
-      - checkout
-      - composer/install:
-          working-dir: tests
-
 workflows:
   test-pack:
     unless: << pipeline.parameters.run-integration-tests >>
@@ -59,8 +51,8 @@ workflows:
   integration-test_deploy:
     when: << pipeline.parameters.run-integration-tests >>
     jobs:
-      # The job below is the integration tests
       - composer/checkout_install:
+          name: integration-test
           executor: "default"
           pre-steps:
             - composer/install_bin:
