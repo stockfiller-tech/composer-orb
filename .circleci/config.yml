@@ -48,7 +48,7 @@ jobs:
     docker:
       - image: circleci/circleci-cli
     environment:
-      CIRCLE_CLI_TOKEN: "${CIRCLE_TOKEN}"
+      CIRCLECI_CLI_TOKEN: "${CIRCLE_TOKEN}"
       ORB_PATH: orb.yml
     steps:
       - checkout
