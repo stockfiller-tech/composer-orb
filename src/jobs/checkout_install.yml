@@ -23,37 +23,41 @@ description: >-
   Checkout source code and run Composer install. This job exists primarily for testing purposes
   and it is recommended to use the commands directly.
 parameters:
+  executor:
+    description: Environment to run in
+    type: executor
+    default: default
   cache-version:
-    default: v1
     description: Bump to invalidate cache. Set to empty string to disable caching
+    default: v1
     type: string
   classmap-authoritative:
-    default: false
     description: Autoload classes from the classmap only. Implicitly enables --optimize-autoloader
+    default: false
     type: boolean
   ignore-platform-reqs:
-    default: false
     description: Ignore all platform requirements (php & ext- packages)
+    default: false
     type: boolean
   no-dev:
-    default: false
     description: Disables installation of require-dev packages
+    default: false
     type: boolean
   no-scripts:
-    default: true
     description: Skips the execution of all scripts defined in composer.json file
+    default: true
     type: boolean
   optimize-autoloader:
-    default: false
     description: Optimize autoloader during autoloader dump
+    default: false
     type: boolean
   prefer-dist:
-    default: true
     description: Forces installation from package dist even for dev versions
+    default: true
     type: boolean
   flags:
-    type: string
     description: Composer flags to append to the install command
+    type: string
     default: ""
   bin:
     description: Path to composer binary
