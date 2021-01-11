@@ -1,11 +1,11 @@
 version: 2.1
 
 executors:
-  default:
+  php:
     docker:
       - image: cimg/php:7.4
     resource_class: small
-  circleci-cli:
+  default:
     docker:
       - image: cimg/base
     resource_class: small
@@ -32,7 +32,7 @@ parameters:
 
 jobs:
   integration-test:
-    executor: default
+    executor: php
     steps:
       - checkout
       - run: |-
@@ -54,7 +54,7 @@ jobs:
       # Test default values
       - composer/install
   deploy:
-    executor: circleci-cli
+    executor: default
     steps:
       - checkout
       - orb/pack
@@ -63,7 +63,7 @@ jobs:
       - store_artifacts:
           path: orb.yml
   trigger_workflow:
-    executor: circleci-cli
+    executor: default
     parameters:
       workflow:
         type: string
