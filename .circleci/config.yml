@@ -1,11 +1,5 @@
 version: 2.1
 
-executors:
-  default:
-    docker:
-      - image: cimg/php:7.4
-    resource_class: small
-
 orbs:
   composer: stockfiller/composer@<<pipeline.parameters.dev-orb-version>>
   orb-tools: circleci/orb-tools@10.0
@@ -28,7 +22,8 @@ parameters:
 
 jobs:
   integration-test:
-    executor: default
+    docker:
+      - image: cimg/php:7.4
     steps:
       - checkout
       - run: |-
@@ -50,14 +45,21 @@ jobs:
       # Test default values
       - composer/install
   deploy:
-    executor: default
+    docker:
+      - image: circleci/circleci-cli
+    environment:
+      CIRCLE_CLI_TOKEN: "${CIRCLE_TOKEN}"
+      ORB_PATH: orb.yml
     steps:
       - checkout
-      - orb-tools/pack
-      - orb-tools/publish:
-          orb-ref: stockfiller/composer@${CIRCLE_TOKEN}
+      - run:
+          name: Pack orb
+          command: circleci orb pack src > ${ORB_PATH}
+      - run:
+          name: Deploy orb
+          command: circleci orb publish ${ORB_PATH} stockfiller/composer@${CIRCLE_TOKEN}
       - store_artifacts:
-          path: orb.yml
+          path: "${ORB_PATH}"
 
 workflows:
   test-pack:
@@ -93,7 +95,7 @@ workflows:
                 name: Overwrite tag as branch, if it exists
                 command: |-
                   if [ ! -z "${CIRCLE_TAG}" ]; then
-                    echo "export CIRCLE_BRANCH=${CIRCLE_TAG}" >> $BASH_ENV
+                    echo 'export CIRCLE_BRANCH=${CIRCLE_TAG}' >> $BASH_ENV
                   fi
 
   integration-test_deploy:
