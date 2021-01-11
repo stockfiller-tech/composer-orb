@@ -82,7 +82,7 @@ steps:
       bin: << parameters.bin >>
       working-dir: << parameters.working-dir >>
   - store_artifacts:
-      path: vendor
+      path: << parameters.working-dir >>/vendor
   - persist_to_workspace:
-      root: vendor
+      root: << parameters.working-dir >>/vendor
       paths: [ "*" ]
