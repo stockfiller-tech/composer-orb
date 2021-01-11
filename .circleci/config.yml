@@ -59,7 +59,47 @@ workflows:
   integration-test_deploy:
     when: << pipeline.parameters.run-integration-tests >>
     jobs:
-      - integration-test
+      # The job below is the integration tests
+      - checkout_install:
+          executor: default
+          pre-steps:
+            - install_bin:
+                filename: composer.phar
+                install-dir: /tmp/composer
+            - checkout:
+                path: /tmp/source
+          matrix:
+            parameters:
+              cache-version:
+                - v1
+                - ""
+              classmap-authoritative:
+                - true
+                - false
+              ignore-platform-reqs:
+                - true
+                - false
+              no-dev:
+                - true
+                - false
+              no-scripts:
+                - true
+                - false
+              optimize-autoloader:
+                - true
+                - false
+              prefer-dist:
+                - true
+                - false
+              flags:
+                - ""
+                - --no-cache
+              bin:
+                - composer
+                - /tmp/composer/composer.phar
+              working-dir:
+                - ""
+                - /tmp/source
       - orb-tools/dev-promote-prod-from-git-tag:
           orb-name: stockfiller/composer
           context: orb-publishing

@@ -1,0 +1,83 @@
+# MIT License
+#
+# Copyright (c) 2020 Stockfiller AB
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+description: >-
+  Checkout source code and run Composer install. This job exists primarily for testing purposes
+  and it is recommended to use the commands directly.
+parameters:
+  cache-version:
+    default: v1
+    description: Bump to invalidate cache. Set to empty string to disable caching
+    type: string
+  classmap-authoritative:
+    default: false
+    description: Autoload classes from the classmap only. Implicitly enables --optimize-autoloader
+    type: boolean
+  ignore-platform-reqs:
+    default: false
+    description: Ignore all platform requirements (php & ext- packages)
+    type: boolean
+  no-dev:
+    default: false
+    description: Disables installation of require-dev packages
+    type: boolean
+  no-scripts:
+    default: true
+    description: Skips the execution of all scripts defined in composer.json file
+    type: boolean
+  optimize-autoloader:
+    default: false
+    description: Optimize autoloader during autoloader dump
+    type: boolean
+  prefer-dist:
+    default: true
+    description: Forces installation from package dist even for dev versions
+    type: boolean
+  flags:
+    type: string
+    description: Composer flags to append to the install command
+    default: ""
+  bin:
+    description: Path to composer binary
+    type: string
+    default: composer
+  working-dir:
+    description: If specified, use the given directory as working directory
+    type: string
+    default: ""
+steps:
+  - checkout
+  - composer/install:
+      cache-version: << parameters.cache-version >>
+      classmap-authoritative: << parameters.classmap-authoritative >>
+      ignore-platform-reqs: << parameters.ignore-platform-reqs >>
+      no-dev: << parameters.no-dev >>
+      no-scripts: << parameters.no-scripts >>
+      optimize-autoloader: << parameters.optimize-autoloader >>
+      prefer-dist: << parameters.prefer-dist >>
+      flags: << parameters.flags >>
+      bin: << parameters.bin >>
+      working-dir: << parameters.working-dir >>
+  - store_artifacts:
+      path: vendor
+  - persist_to_workspace:
+      root: vendor
+      paths: [ "*" ]
