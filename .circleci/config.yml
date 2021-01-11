@@ -5,6 +5,10 @@ executors:
     docker:
       - image: cimg/php:7.4
     resource_class: small
+  circleci-cli:
+    docker:
+      - image: circleci/circleci-cli
+    resource_class: small
 
 orbs:
   composer: stockfiller/composer@<<pipeline.parameters.dev-orb-version>>
@@ -49,6 +53,14 @@ jobs:
           cache-version: ""
       # Test default values
       - composer/install
+  deploy:
+    executor: circleci-cli
+    steps:
+      - run:
+          name: Deploy to production
+          command: >-
+            circleci orb pack --skip-update-check src | circleci orb publish --skip-update-check - stockfiller/composer@${CIRCLE_TAG}
+
 
 workflows:
   test-pack:
@@ -78,21 +90,16 @@ workflows:
           filters: *filters
           name: trigger-integration-dev
           context: orb-publishing
-          requires:
-            - orb-tools/publish-dev
+          requires: [ orb-tools/publish-dev ]
 
   integration-test_deploy:
     when: << pipeline.parameters.run-integration-tests >>
     jobs:
       - integration-test:
           filters: *filters
-      - orb-tools/dev-promote-prod-from-git-tag:
-          orb-name: stockfiller/composer
-          context: orb-publishing
-          add-pr-comment: false
-          requires:
-            - integration-test
+      - deploy:
+          requires: [ integration-test ]
           filters:
             <<: *filters
             branches:
-              ignore: /.*/
+              ignore: /.+/
