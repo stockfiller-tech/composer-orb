@@ -35,7 +35,7 @@ jobs:
           path: /tmp/source
       - run: cp tests/composer.json composer.json
       - composer/install_bin:
-          install-bir: /tmp/composer
+          install-dir: /tmp/composer
       - composer/install:
           working-dir: tests
           classmap-authoritative: true
