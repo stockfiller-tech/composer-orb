@@ -44,23 +44,6 @@ jobs:
           cache-version: ""
       # Test default values
       - composer/install
-  deploy:
-    docker:
-      - image: circleci/circleci-cli
-    environment:
-      CIRCLECI_CLI_TOKEN: "${CIRCLE_TOKEN}"
-      ORB_PATH: orb.yml
-      CIRCLE_FLAGS: --skip-update-check
-    steps:
-      - checkout
-      - run:
-          name: Pack orb
-          command: circleci orb pack src ${CIRCLE_FLAGS} > ${ORB_PATH}
-      - run:
-          name: Deploy orb
-          command: circleci orb publish ${ORB_PATH} stockfiller/composer@${CIRCLE_BRANCH} ${CIRCLE_FLAGS}
-      - store_artifacts:
-          path: "${ORB_PATH}"
 
 workflows:
   test-pack:
@@ -103,10 +86,14 @@ workflows:
     jobs:
       - integration-test:
           filters: *filters
-      - deploy:
+      - orb-tools/dev-promote-prod-from-commit-subject:
+          orb-name: stockfiller/composer
+          add-pr-comment: false
+          fail-if-semver-not-indicated: true
+          publish-version-tag: false
           context: [ orb-publishing ]
           requires: [ integration-test ]
-          #filters:
-          #<<: *filters
-          #branches:
-          #ignore: /.*/
+          filters:
+            <<: *filters
+            branches:
+              ignore: /.*/
