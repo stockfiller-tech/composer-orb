@@ -80,7 +80,8 @@ workflows:
           orb-name: stockfiller/composer
           add-pr-comment: false
           fail-if-semver-not-indicated: true
-          publish-version-tag: false
+          publish-version-tag: true
+          ssh-fingerprints: "2b:52:3b:d3:ca:2b:b3:e2:be:5c:0f:c7:78:b5:b5:29"
           context: [ orb-publishing ]
           requires: [ integration-test ]
           filters:
