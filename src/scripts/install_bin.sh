@@ -35,7 +35,7 @@ fi
 FLAGS=""
 
 if [ -n "${PARAM_FILENAME}" ]; then
-    FLAGS="${FLAGS }--filename=${PARAM_FILENAME}"
+    FLAGS="${FLAGS } --filename=${PARAM_FILENAME}"
 fi
 
 if [ -n "${PARAM_INSTALL_DIR}" ]; then
