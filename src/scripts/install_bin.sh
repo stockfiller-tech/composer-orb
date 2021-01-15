@@ -46,6 +46,10 @@ if [ -n "${PARAM_VERSION}" ]; then
     FLAGS="${FLAGS} --version=${PARAM_VERSION}"
 fi
 
+# strip leading whitespace
+# see: https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
+FLAGS="${FLAGS## }"
+
 echo "Installing Composer with flags \"${FLAGS}\""
 
 php composer-setup.php --quiet "${FILENAME}" "${INSTALL_DIR}" "${VERSION}"
