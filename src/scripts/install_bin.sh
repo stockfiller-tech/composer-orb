@@ -40,6 +40,11 @@ fi
 
 if [ -n "${PARAM_INSTALL_DIR}" ]; then
     FLAGS="${FLAGS} --install-dir=${PARAM_INSTALL_DIR}"
+
+    if [ ! -f "${PARAM_INSTALL_DIR}" ]; then
+        echo "Creating install dir \"${PARAM_INSTALL_DIR}\""
+        mkdir -p "${PARAM_INSTALL_DIR}"
+    fi
 fi
 
 if [ -n "${PARAM_VERSION}" ]; then
