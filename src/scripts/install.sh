@@ -56,6 +56,10 @@ if [ -z "${PARAM_CACHE_VERSION}" ]; then
     FLAGS="${FLAGS} --no-cache"
 fi
 
+# strip leading whitespace
+# see: https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
+FLAGS="${FLAGS## }"
+
 echo "Running command \"${PARAM_BIN}\" with flags \"${FLAGS}\""
 
 "${PARAM_BIN}" install --no-interaction "${FLAGS}"
