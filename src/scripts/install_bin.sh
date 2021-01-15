@@ -32,23 +32,21 @@ if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]; then
     exit 1
 fi
 
-if [ -z "${PARAM_FILENAME}" ]; then
-    FILENAME=""
-else
-    FILENAME="--filename=${PARAM_FILENAME}"
+FLAGS=""
+
+if [ -n "${PARAM_FILENAME}" ]; then
+    FLAGS="${FLAGS }--filename=${PARAM_FILENAME}"
 fi
 
-if [ -z "${PARAM_INSTALL_DIR}" ]; then
-    INSTALL_DIR=""
-else
-    INSTALL_DIR="--install-dir=${PARAM_INSTALL_DIR}"
+if [ -n "${PARAM_INSTALL_DIR}" ]; then
+    FLAGS="${FLAGS} --install-dir=${PARAM_INSTALL_DIR}"
 fi
 
-if [ -z "${PARAM_VERSION}" ]; then
-    VERSION=""
-else
-    VERSION="--version=${PARAM_VERSION}"
+if [ -n "${PARAM_VERSION}" ]; then
+    FLAGS="${FLAGS} --version=${PARAM_VERSION}"
 fi
+
+echo "Installing Composer with flags \"${FLAGS}\""
 
 php composer-setup.php --quiet "${FILENAME}" "${INSTALL_DIR}" "${VERSION}"
 RESULT=$?
