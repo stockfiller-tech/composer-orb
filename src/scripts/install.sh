@@ -28,27 +28,27 @@ if [ -n "${PARAM_WORKING_DIR}" ]; then
     FLAGS="${FLAGS} --working-dir=${PARAM_WORKING_DIR}"
 fi
 
-if [ -n "${PARAM_PREFER_DIST}" ]; then
+if [ "${PARAM_PREFER_DIST}" = "true" ]; then
     FLAGS="${FLAGS} --prefer-dist"
 fi
 
-if [ -n "${PARAM_NO_SCRIPTS}" ]; then
+if [ "${PARAM_NO_SCRIPTS}" = "true" ]; then
     FLAGS="${FLAGS} --no-scripts"
 fi
 
-if [ -n "${PARAM_IGNORE_PLATFORM_REQS}" ]; then
+if [ "${PARAM_IGNORE_PLATFORM_REQS}" = "true" ]; then
     FLAGS="${FLAGS} --ignore-platform-reqs"
 fi
 
-if [ -n "${PARAM_NO_DEV}" ]; then
+if [ "${PARAM_NO_DEV}" = "true" ]; then
     FLAGS="${FLAGS} --no-dev"
 fi
 
-if [ -n "${PARAM_CLASSMAP_AUTHORITATIVE}" ]; then
+if [ "${PARAM_CLASSMAP_AUTHORITATIVE}" = "true" ]; then
     FLAGS="${FLAGS} --classmap-authoritative"
 fi
 
-if [ -n "${PARAM_OPTIMIZE_AUTOLOADER}" ]; then
+if [ "${PARAM_OPTIMIZE_AUTOLOADER}" = "true" ]; then
     FLAGS="${FLAGS} --optimize-autoloader"
 fi
 
