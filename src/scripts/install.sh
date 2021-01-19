@@ -65,9 +65,9 @@ else
 fi
 
 if [ -z "${PARAM_CACHE_VERSION}" ]; then
-    CACHE_VERSION="--no-cache"
+    NO_CACHE="--no-cache"
 else
-    CACHE_VERSION=""
+    NO_CACHE=""
 fi
 
 echo "Running command \"${PARAM_BIN}\" with flags: " \
@@ -78,6 +78,6 @@ echo "Running command \"${PARAM_BIN}\" with flags: " \
     "${NO_DEV}" \
     "${CLASSMAP_AUTHORITATIVE}" \
     "${OPTIMIZE_AUTOLOADER}" \
-    "${CACHE_VERSION}"
+    "${NO_CACHE}"
 
-"${PARAM_BIN}" install --no-interaction "${WORKING_DIR}" "${PREFER_DIST}" "${NO_SCRIPTS}" "${IGNORE_PLATFORM_REQS}" "${NO_DEV}" "${CLASSMAP_AUTHORITATIVE}" "${OPTIMIZE_AUTOLOADER}" "${CACHE_VERSION}"
+"${PARAM_BIN}" install --no-interaction "${WORKING_DIR}" "${PREFER_DIST}" "${NO_SCRIPTS}" "${IGNORE_PLATFORM_REQS}" "${NO_DEV}" "${CLASSMAP_AUTHORITATIVE}" "${OPTIMIZE_AUTOLOADER}" "${NO_CACHE}"
