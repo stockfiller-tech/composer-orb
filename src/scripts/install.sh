@@ -62,4 +62,4 @@ FLAGS="${FLAGS## }"
 
 echo "Running command \"${PARAM_BIN}\" with flags \"${FLAGS}\""
 
-"${PARAM_BIN}" install --no-interaction "${FLAGS}"
+"${PARAM_BIN}" install --no-interaction ${FLAGS}

@@ -57,7 +57,7 @@ FLAGS="${FLAGS## }"
 
 echo "Installing Composer with flags \"${FLAGS}\""
 
-php composer-setup.php --quiet "${FLAGS}"
+php composer-setup.php --quiet ${FLAGS}
 RESULT=$?
 rm composer-setup.php
 exit $RESULT
