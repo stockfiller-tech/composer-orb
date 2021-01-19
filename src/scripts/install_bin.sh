@@ -32,32 +32,31 @@ if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]; then
     exit 1
 fi
 
-FLAGS=""
-
 if [ -n "${PARAM_FILENAME}" ]; then
-    FLAGS="${FLAGS} --filename=${PARAM_FILENAME}"
+    FILENAME="--filename=${PARAM_FILENAME}"
+else
+    FILENAME=""
 fi
 
 if [ -n "${PARAM_INSTALL_DIR}" ]; then
-    FLAGS="${FLAGS} --install-dir=${PARAM_INSTALL_DIR}"
-
-    if [ ! -f "${PARAM_INSTALL_DIR}" ]; then
-        echo "Creating install dir \"${PARAM_INSTALL_DIR}\""
-        mkdir -p "${PARAM_INSTALL_DIR}"
-    fi
+    INSTALL_DIR="--install-dir=${PARAM_INSTALL_DIR}"
+else
+    INSTALL_DIR=""
 fi
 
 if [ -n "${PARAM_VERSION}" ]; then
-    FLAGS="${FLAGS} --version=${PARAM_VERSION}"
+    VERSION="--version=${PARAM_VERSION}"
+else
+    VERSION=""
 fi
 
-# strip leading whitespace
-# see: https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
+FLAGS="${FILENAME} ${INSTALL_DIR} ${VERSION}"
+# Strip leading whitespace
 FLAGS="${FLAGS## }"
 
 echo "Installing Composer with flags \"${FLAGS}\""
 
-php composer-setup.php --quiet ${FLAGS}
+php composer-setup.php --quiet "${FLAGS}"
 RESULT=$?
 rm composer-setup.php
 exit $RESULT

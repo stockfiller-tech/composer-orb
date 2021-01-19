@@ -22,44 +22,65 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-FLAGS=""
-
 if [ -n "${PARAM_WORKING_DIR}" ]; then
-    FLAGS="${FLAGS} --working-dir=${PARAM_WORKING_DIR}"
+    WORKING_DIR="--working-dir=${PARAM_WORKING_DIR}"
+else
+    WORKING_DIR=""
 fi
 
 if [ "${PARAM_PREFER_DIST}" = "true" ]; then
-    FLAGS="${FLAGS} --prefer-dist"
+    PREFER_DIST="--prefer-dist"
+else
+    PREFER_DIST=""
 fi
 
 if [ "${PARAM_NO_SCRIPTS}" = "true" ]; then
-    FLAGS="${FLAGS} --no-scripts"
+    NO_SCRIPTS="--no-scripts"
+else
+    NO_SCRIPTS=""
 fi
 
 if [ "${PARAM_IGNORE_PLATFORM_REQS}" = "true" ]; then
-    FLAGS="${FLAGS} --ignore-platform-reqs"
+    IGNORE_PLATFORM_REQS="--ignore-platform-reqs"
+else
+    IGNORE_PLATFORM_REQS=""
 fi
 
 if [ "${PARAM_NO_DEV}" = "true" ]; then
-    FLAGS="${FLAGS} --no-dev"
+    NO_DEV="--no-dev"
+else
+    NO_DEV=""
 fi
 
 if [ "${PARAM_CLASSMAP_AUTHORITATIVE}" = "true" ]; then
-    FLAGS="${FLAGS} --classmap-authoritative"
+    CLASSMAP_AUTHORITATIVE="--classmap-authoritative"
+else
+    CLASSMAP_AUTHORITATIVE=""
 fi
 
 if [ "${PARAM_OPTIMIZE_AUTOLOADER}" = "true" ]; then
-    FLAGS="${FLAGS} --optimize-autoloader"
+    OPTIMIZE_AUTOLOADER="--optimize-autoloader"
+else
+    OPTIMIZE_AUTOLOADER=""
 fi
 
 if [ -z "${PARAM_CACHE_VERSION}" ]; then
-    FLAGS="${FLAGS} --no-cache"
+    CACHE_VERSION="--no-cache"
+else
+    CACHE_VERSION=""
 fi
 
-# strip leading whitespace
-# see: https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
-FLAGS="${FLAGS## }"
+FLAGS="${WORKING_DIR}" \
+    " ${PREFER_DIST}" \
+    " ${NO_SCRIPTS}" \
+    " ${IGNORE_PLATFORM_REQS}" \
+    " ${NO_DEV}" \
+    " ${CLASSMAP_AUTHORITATIVE}" \
+    " ${OPTIMIZE_AUTOLOADER}" \
+    " ${CACHE_VERSION}"
+# Strip leading whitespace
+FLAGS=${FLAGS## }
 
 echo "Running command \"${PARAM_BIN}\" with flags \"${FLAGS}\""
 
-"${PARAM_BIN}" install --no-interaction ${FLAGS}
+"${PARAM_BIN}" install --no-interaction "${FLAGS}"
