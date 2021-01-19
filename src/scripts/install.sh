@@ -54,6 +54,7 @@ if [ -z "${PARAM_CACHE_VERSION}" ]; then
     set -- "$@" "--no-cache"
 fi
 
-echo "Running command \"${PARAM_BIN}\" '${PARAM_CLASSMAP_AUTHORITATIVE}' with flags: " "$@"
+echo "authoritative = ${PARAM_CLASSMAP_AUTHORITATIVE}"
+echo "Running command \"${PARAM_BIN}\" with flags: " "$@"
 
 "${PARAM_BIN}" install --no-interaction "$@"
