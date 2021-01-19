@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/ash
 
 # MIT License
 #
@@ -23,61 +23,37 @@
 # SOFTWARE.
 
 if [ -n "${PARAM_WORKING_DIR}" ]; then
-    WORKING_DIR="--working-dir=${PARAM_WORKING_DIR}"
-else
-    WORKING_DIR=""
+    set -- "$@" "--working-dir=${PARAM_WORKING_DIR}"
 fi
 
 if [ "${PARAM_PREFER_DIST}" = "true" ]; then
-    PREFER_DIST="--prefer-dist"
-else
-    PREFER_DIST=""
+    set -- "$@" "--prefer-dist"
 fi
 
 if [ "${PARAM_NO_SCRIPTS}" = "true" ]; then
-    NO_SCRIPTS="--no-scripts"
-else
-    NO_SCRIPTS=""
+    set -- "$@" "--no-scripts"
 fi
 
 if [ "${PARAM_IGNORE_PLATFORM_REQS}" = "true" ]; then
-    IGNORE_PLATFORM_REQS="--ignore-platform-reqs"
-else
-    IGNORE_PLATFORM_REQS=""
+    set -- "$@" "--ignore-platform-reqs"
 fi
 
 if [ "${PARAM_NO_DEV}" = "true" ]; then
-    NO_DEV="--no-dev"
-else
-    NO_DEV=""
+    set -- "$@" "--no-dev"
 fi
 
 if [ "${PARAM_CLASSMAP_AUTHORITATIVE}" = "true" ]; then
-    CLASSMAP_AUTHORITATIVE="--classmap-authoritative"
-else
-    CLASSMAP_AUTHORITATIVE=""
+    set -- "$@" "--classmap-authoritative"
 fi
 
 if [ "${PARAM_OPTIMIZE_AUTOLOADER}" = "true" ]; then
-    OPTIMIZE_AUTOLOADER="--optimize-autoloader"
-else
-    OPTIMIZE_AUTOLOADER=""
+    set -- "$@" "--optimize-autoloader"
 fi
 
 if [ -z "${PARAM_CACHE_VERSION}" ]; then
-    NO_CACHE="--no-cache"
-else
-    NO_CACHE=""
+    set -- "$@" "--no-cache"
 fi
 
-echo "Running command \"${PARAM_BIN}\" with flags: " \
-    "${WORKING_DIR}" \
-    "${PREFER_DIST}" \
-    "${NO_SCRIPTS}" \
-    "${IGNORE_PLATFORM_REQS}" \
-    "${NO_DEV}" \
-    "${CLASSMAP_AUTHORITATIVE}" \
-    "${OPTIMIZE_AUTOLOADER}" \
-    "${NO_CACHE}"
+echo "Running command \"${PARAM_BIN}\" with flags: " "$@"
 
-"${PARAM_BIN}" install --no-interaction "${WORKING_DIR}" "${PREFER_DIST}" "${NO_SCRIPTS}" "${IGNORE_PLATFORM_REQS}" "${NO_DEV}" "${CLASSMAP_AUTHORITATIVE}" "${OPTIMIZE_AUTOLOADER}" "${NO_CACHE}"
+"${PARAM_BIN}" install --no-interaction "$@"
