@@ -26,34 +26,14 @@ if [ -n "${PARAM_WORKING_DIR}" ]; then
     set -- "$@" "--working-dir=${PARAM_WORKING_DIR}"
 fi
 
-if [ "${PARAM_PREFER_DIST}" -eq 1 ]; then
-    set -- "$@" "--prefer-dist"
-fi
-
-if [ "${PARAM_NO_SCRIPTS}" -eq 1 ]; then
-    set -- "$@" "--no-scripts"
-fi
-
 if [ "${PARAM_IGNORE_PLATFORM_REQS}" -eq 1 ]; then
     set -- "$@" "--ignore-platform-reqs"
-fi
-
-if [ "${PARAM_NO_DEV}" -eq 1 ]; then
-    set -- "$@" "--no-dev"
-fi
-
-if [ "${PARAM_CLASSMAP_AUTHORITATIVE}" -eq 1 ]; then
-    set -- "$@" "--classmap-authoritative"
-fi
-
-if [ "${PARAM_OPTIMIZE_AUTOLOADER}" -eq 1 ]; then
-    set -- "$@" "--optimize-autoloader"
 fi
 
 if [ -z "${PARAM_CACHE_VERSION}" ]; then
     set -- "$@" "--no-cache"
 fi
 
-echo "Running command \"${PARAM_BIN} install\" with flags: " "$@"
+echo "Running command \"${PARAM_BIN} update\" with flags: " "$@"
 
-"${PARAM_BIN}" install --no-interaction "$@"
+"${PARAM_BIN}" update --no-interaction --no-install "$@"
