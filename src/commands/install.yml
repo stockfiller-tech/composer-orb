@@ -57,22 +57,17 @@ parameters:
     description: If specified, use the given directory as working directory
     type: string
     default: "."
-environment:
-  PARAM_CACHE_VERSION: << parameters.cache-version >>
-  PARAM_CLASSMAP_AUTHORITATIVE: << parameters.classmap-authoritative >>
-  PARAM_IGNORE_PLATFORM_REQS: << parameters.ignore-platform-reqs >>
-  PARAM_NO_DEV: << parameters.no-dev >>
-  PARAM_NO_SCRIPTS: << parameters.no-scripts >>
-  PARAM_OPTIMIZE_AUTOLOADER: << parameters.optimize-autoloader >>
-  PARAM_PREFER_DIST: << parameters.prefer-dist >>
-  PARAM_BIN: << parameters.bin >>
-  PARAM_WORKING_DIR: << parameters.working-dir >>
 steps:
   - when:
       condition: << parameters.cache-version >>
       steps:
         - run:
             name: Ensure Composer lock file exists
+            environment:
+              PARAM_CACHE_VERSION: << parameters.cache-version >>
+              PARAM_IGNORE_PLATFORM_REQS: << parameters.ignore-platform-reqs >>
+              PARAM_BIN: << parameters.bin >>
+              PARAM_WORKING_DIR: << parameters.working-dir >>
             command: << include(scripts/ensure_lock.sh) >>
         - restore_cache:
             keys:
@@ -80,6 +75,16 @@ steps:
               - << parameters.cache-version >>-composer
   - run:
       name: Install Composer dependencies
+      environment:
+        PARAM_CACHE_VERSION: << parameters.cache-version >>
+        PARAM_CLASSMAP_AUTHORITATIVE: << parameters.classmap-authoritative >>
+        PARAM_IGNORE_PLATFORM_REQS: << parameters.ignore-platform-reqs >>
+        PARAM_NO_DEV: << parameters.no-dev >>
+        PARAM_NO_SCRIPTS: << parameters.no-scripts >>
+        PARAM_OPTIMIZE_AUTOLOADER: << parameters.optimize-autoloader >>
+        PARAM_PREFER_DIST: << parameters.prefer-dist >>
+        PARAM_BIN: << parameters.bin >>
+        PARAM_WORKING_DIR: << parameters.working-dir >>
       command: << include(scripts/install.sh) >>
   - when:
       condition: << parameters.cache-version >>
