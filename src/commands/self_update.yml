@@ -20,8 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 description: Update Composer binaries
+parameters:
+  bin:
+    description: Path to composer binary
+    type: string
+    default: composer
 steps:
   - run:
       name: Self update Composer
       command: |-
-        COMPOSER_CACHE_DIR=/tmp composer self-update --clean-backups --no-cache --no-interaction
+        << parameters.bin >> self-update --clean-backups --no-cache --no-interaction

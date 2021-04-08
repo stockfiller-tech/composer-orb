@@ -59,6 +59,7 @@ parameters:
     default: "."
 steps:
   - self_update
+      bin: << parameters.bin >>
   - when:
       condition: << parameters.cache-version >>
       steps:
