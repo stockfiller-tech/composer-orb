@@ -24,4 +24,4 @@ steps:
   - run:
       name: Self update Composer
       command: |-
-        composer self-update --clean-backups --no-cache --no-interaction
+        TMPDIR=/tmp composer self-update --clean-backups --no-cache --no-interaction
