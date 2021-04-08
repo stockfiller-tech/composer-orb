@@ -29,4 +29,4 @@ steps:
   - run:
       name: Self update Composer
       command: |-
-        << parameters.bin >> self-update
+        << parameters.bin >> self-update --clean-backups --no-interaction
